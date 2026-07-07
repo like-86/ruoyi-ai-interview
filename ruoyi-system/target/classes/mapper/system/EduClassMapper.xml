@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.EduClassMapper">
+    
+    <resultMap type="EduClass" id="EduClassResult">
+        <result property="id"    column="id"    />
+        <result property="className"    column="class_name"    />
+        <result property="beginDate"    column="begin_date"    />
+        <result property="studentCount"    column="student_count"    />
+        <result property="address"    column="address"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectEduClassVo">
+        select id, class_name, begin_date, student_count, address, create_by, create_time, update_by, update_time, remark from edu_class
+    </sql>
+
+    <select id="selectEduClassList" parameterType="EduClass" resultMap="EduClassResult">
+        <include refid="selectEduClassVo"/>
+        <where>  
+            <if test="className != null  and className != ''"> and class_name like concat('%', #{className}, '%')</if>
+            <if test="beginDate != null "> and begin_date = #{beginDate}</if>
+            <if test="studentCount != null "> and student_count = #{studentCount}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduClassById" parameterType="Long" resultMap="EduClassResult">
+        <include refid="selectEduClassVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertEduClass" parameterType="EduClass" useGeneratedKeys="true" keyProperty="id">
+        insert into edu_class
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="className != null and className != ''">class_name,</if>
+            <if test="beginDate != null">begin_date,</if>
+            <if test="studentCount != null">student_count,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="className != null and className != ''">#{className},</if>
+            <if test="beginDate != null">#{beginDate},</if>
+            <if test="studentCount != null">#{studentCount},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduClass" parameterType="EduClass">
+        update edu_class
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="className != null and className != ''">class_name = #{className},</if>
+            <if test="beginDate != null">begin_date = #{beginDate},</if>
+            <if test="studentCount != null">student_count = #{studentCount},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEduClassById" parameterType="Long">
+        delete from edu_class where id = #{id}
+    </delete>
+
+    <delete id="deleteEduClassByIds" parameterType="String">
+        delete from edu_class where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

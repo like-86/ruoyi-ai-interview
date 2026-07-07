@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.interview.mapper.InterviewReportMapper">
+    
+    <resultMap type="InterviewReport" id="InterviewReportResult">
+        <result property="id"    column="id"    />
+        <result property="recordId"    column="record_id"    />
+        <result property="overallScore"    column="overall_score"    />
+        <result property="overallEvaluation"    column="overall_evaluation"    />
+        <result property="strengths"    column="strengths"    />
+        <result property="weaknesses"    column="weaknesses"    />
+        <result property="suggestions"    column="suggestions"    />
+        <result property="generateTime"    column="generate_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectInterviewReportVo">
+        select id, record_id, overall_score, overall_evaluation, strengths, weaknesses, suggestions, generate_time, create_time, update_time from interview_report
+    </sql>
+
+    <select id="selectInterviewReportList" parameterType="InterviewReport" resultMap="InterviewReportResult">
+        <include refid="selectInterviewReportVo"/>
+        <where>  
+            <if test="recordId != null "> and record_id = #{recordId}</if>
+            <if test="overallScore != null "> and overall_score = #{overallScore}</if>
+            <if test="overallEvaluation != null  and overallEvaluation != ''"> and overall_evaluation = #{overallEvaluation}</if>
+            <if test="strengths != null  and strengths != ''"> and strengths = #{strengths}</if>
+            <if test="weaknesses != null  and weaknesses != ''"> and weaknesses = #{weaknesses}</if>
+            <if test="suggestions != null  and suggestions != ''"> and suggestions = #{suggestions}</if>
+            <if test="generateTime != null "> and generate_time = #{generateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectInterviewReportById" parameterType="Long" resultMap="InterviewReportResult">
+        <include refid="selectInterviewReportVo"/>
+        where record_id = #{id}
+    </select>
+
+    <insert id="insertInterviewReport" parameterType="InterviewReport" useGeneratedKeys="true" keyProperty="id">
+        insert into interview_report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">record_id,</if>
+            <if test="overallScore != null">overall_score,</if>
+            <if test="overallEvaluation != null">overall_evaluation,</if>
+            <if test="strengths != null">strengths,</if>
+            <if test="weaknesses != null">weaknesses,</if>
+            <if test="suggestions != null">suggestions,</if>
+            <if test="generateTime != null">generate_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">#{recordId},</if>
+            <if test="overallScore != null">#{overallScore},</if>
+            <if test="overallEvaluation != null">#{overallEvaluation},</if>
+            <if test="strengths != null">#{strengths},</if>
+            <if test="weaknesses != null">#{weaknesses},</if>
+            <if test="suggestions != null">#{suggestions},</if>
+            <if test="generateTime != null">#{generateTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInterviewReport" parameterType="InterviewReport">
+        update interview_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="recordId != null">record_id = #{recordId},</if>
+            <if test="overallScore != null">overall_score = #{overallScore},</if>
+            <if test="overallEvaluation != null">overall_evaluation = #{overallEvaluation},</if>
+            <if test="strengths != null">strengths = #{strengths},</if>
+            <if test="weaknesses != null">weaknesses = #{weaknesses},</if>
+            <if test="suggestions != null">suggestions = #{suggestions},</if>
+            <if test="generateTime != null">generate_time = #{generateTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteInterviewReportById" parameterType="Long">
+        delete from interview_report where id = #{id}
+    </delete>
+
+    <delete id="deleteInterviewReportByIds" parameterType="String">
+        delete from interview_report where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

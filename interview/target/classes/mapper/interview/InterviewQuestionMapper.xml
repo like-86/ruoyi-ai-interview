@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.interview.mapper.InterviewQuestionMapper">
+    
+    <resultMap type="InterviewQuestion" id="InterviewQuestionResult">
+        <result property="id"    column="id"    />
+        <result property="recordId"    column="record_id"    />
+        <result property="questionNo"    column="question_no"    />
+        <result property="content"    column="content"    />
+        <result property="questionPrompt"    column="question_prompt"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectInterviewQuestionVo">
+        select id, record_id, question_no, content, question_prompt, create_time from interview_question
+    </sql>
+
+    <select id="selectInterviewQuestionList" parameterType="InterviewQuestion" resultMap="InterviewQuestionResult">
+        <include refid="selectInterviewQuestionVo"/>
+        <where>  
+            <if test="recordId != null "> and record_id = #{recordId}</if>
+            <if test="questionNo != null "> and question_no = #{questionNo}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="questionPrompt != null  and questionPrompt != ''"> and question_prompt = #{questionPrompt}</if>
+        </where>
+    </select>
+    
+    <select id="selectInterviewQuestionById" parameterType="Long" resultMap="InterviewQuestionResult">
+        <include refid="selectInterviewQuestionVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectInterviewQuestionReportId" resultType="com.ruoyi.interview.domain.InterviewQuestion">
+        select * from interview_question where record_id = #{reportId}
+    </select>
+
+    <insert id="insertInterviewQuestion" parameterType="InterviewQuestion" useGeneratedKeys="true" keyProperty="id">
+        insert into interview_question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">record_id,</if>
+            <if test="questionNo != null">question_no,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="questionPrompt != null">question_prompt,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">#{recordId},</if>
+            <if test="questionNo != null">#{questionNo},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="questionPrompt != null">#{questionPrompt},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInterviewQuestion" parameterType="InterviewQuestion">
+        update interview_question
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="recordId != null">record_id = #{recordId},</if>
+            <if test="questionNo != null">question_no = #{questionNo},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="questionPrompt != null">question_prompt = #{questionPrompt},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteInterviewQuestionById" parameterType="Long">
+        delete from interview_question where id = #{id}
+    </delete>
+
+    <delete id="deleteInterviewQuestionByIds" parameterType="String">
+        delete from interview_question where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
