@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.interview.mapper.InterviewDimensionMapper">
+    
+    <resultMap type="InterviewDimension" id="InterviewDimensionResult">
+        <result property="id"    column="id"    />
+        <result property="positionId"    column="position_id"    />
+        <result property="name"    column="name"    />
+        <result property="description"    column="description"    />
+        <result property="weight"    column="weight"    />
+        <result property="sort"    column="sort"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="positionName"    column="position_name"    />
+    </resultMap>
+    <resultMap type="InterviewDimension" id="InterviewDimensionSimpleResult">
+        <id property="id" column="id"/>
+        <result property="positionId" column="position_id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="weight" column="weight"/>
+        <result property="sort" column="sort"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <!-- 没有 positionName -->
+    </resultMap>
+
+    <sql id="selectInterviewDimensionVo">
+        select d.id, d.position_id, p.name as position_name, d.name, d.description, d.weight, d.sort, d.status,
+        d.create_by, d.create_time, d.update_by, d.update_time, d.remark
+        from interview_dimension d
+        left join interview_position p on d.position_id = p.id
+
+    </sql>
+
+    <select id="selectInterviewDimensionList" parameterType="InterviewDimension" resultMap="InterviewDimensionResult">
+        <include refid="selectInterviewDimensionVo"/>
+        <where>  
+            <if test="positionId != null "> and d.position_id = #{positionId}</if>
+            <if test="name != null  and name != ''"> and p.name like concat('%', #{name}, '%')</if>
+            <if test="description != null  and description != ''"> and d.description = #{description}</if>
+            <if test="weight != null "> and d.weight = #{weight}</if>
+            <if test="sort != null "> and d.sort = #{sort}</if>
+            <if test="status != null  and status != ''"> and d.status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectInterviewDimensionById" parameterType="Long" resultMap="InterviewDimensionResult">
+        <include refid="selectInterviewDimensionVo"/>
+        where d.id = #{id}
+    </select>
+        <select id="selectInterviewDimensionByPositionId" parameterType="Long" resultMap="InterviewDimensionSimpleResult">
+            select * from interview_dimension where position_id = #{id}
+        </select>
+
+    <insert id="insertInterviewDimension" parameterType="InterviewDimension" useGeneratedKeys="true" keyProperty="id">
+        insert into interview_dimension
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="positionId != null">position_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="description != null">description,</if>
+            <if test="weight != null">weight,</if>
+            <if test="sort != null">sort,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="positionId != null">#{positionId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="description != null">#{description},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInterviewDimension" parameterType="InterviewDimension">
+        update interview_dimension
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="positionId != null">position_id = #{positionId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteInterviewDimensionById" parameterType="Long">
+        delete from interview_dimension where id = #{id}
+    </delete>
+
+    <delete id="deleteInterviewDimensionByIds" parameterType="String">
+        delete from interview_dimension where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

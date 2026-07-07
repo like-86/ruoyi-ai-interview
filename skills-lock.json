@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "taxue-career-interview": {
+      "source": "taxueseek/taxueskills",
+      "sourceType": "github",
+      "skillPath": "taxue-career-interview/SKILL.md",
+      "computedHash": "0f349ce7c015ebc7af7fd8bb7d10d56859f9ec34149501398935615bbdcc81a2"
+    }
+  }
+}

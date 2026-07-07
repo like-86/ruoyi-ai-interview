@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.interview.mapper.InterviewDimensionScoreMapper">
+    
+    <resultMap type="InterviewDimensionScore" id="InterviewDimensionScoreResult">
+        <result property="id"    column="id"    />
+        <result property="reportId"    column="report_id"    />
+        <result property="dimensionId"    column="dimension_id"    />
+        <result property="score"    column="score"    />
+        <result property="evaluation"    column="evaluation"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectInterviewDimensionScoreVo">
+        select id, report_id, dimension_id, score, evaluation, create_time from interview_dimension_score
+    </sql>
+
+    <select id="selectInterviewDimensionScoreList" parameterType="InterviewDimensionScore" resultMap="InterviewDimensionScoreResult">
+        <include refid="selectInterviewDimensionScoreVo"/>
+        <where>  
+            <if test="reportId != null "> and report_id = #{reportId}</if>
+            <if test="dimensionId != null "> and dimension_id = #{dimensionId}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="evaluation != null  and evaluation != ''"> and evaluation = #{evaluation}</if>
+        </where>
+    </select>
+    
+    <select id="selectInterviewDimensionScoreById" parameterType="Long" resultMap="InterviewDimensionScoreResult">
+        <include refid="selectInterviewDimensionScoreVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertInterviewDimensionScore" parameterType="InterviewDimensionScore" useGeneratedKeys="true" keyProperty="id">
+        insert into interview_dimension_score
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="reportId != null">report_id,</if>
+            <if test="dimensionId != null">dimension_id,</if>
+            <if test="score != null">score,</if>
+            <if test="evaluation != null">evaluation,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="reportId != null">#{reportId},</if>
+            <if test="dimensionId != null">#{dimensionId},</if>
+            <if test="score != null">#{score},</if>
+            <if test="evaluation != null">#{evaluation},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInterviewDimensionScore" parameterType="InterviewDimensionScore">
+        update interview_dimension_score
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reportId != null">report_id = #{reportId},</if>
+            <if test="dimensionId != null">dimension_id = #{dimensionId},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="evaluation != null">evaluation = #{evaluation},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteInterviewDimensionScoreById" parameterType="Long">
+        delete from interview_dimension_score where id = #{id}
+    </delete>
+
+    <delete id="deleteInterviewDimensionScoreByIds" parameterType="String">
+        delete from interview_dimension_score where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

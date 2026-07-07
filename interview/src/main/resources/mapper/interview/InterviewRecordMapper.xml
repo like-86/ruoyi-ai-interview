@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.interview.mapper.InterviewRecordMapper">
+    
+    <resultMap type="InterviewRecord" id="InterviewRecordResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="positionId"    column="position_id"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="duration"    column="duration"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+    <sql id="selectInterviewRecordVo">
+        select id, user_id, position_id, start_time, end_time, duration, status, create_time, update_time from interview_record
+    </sql>
+
+    <select id="selectInterviewRecordList" parameterType="InterviewRecord" resultMap="InterviewRecordResult">
+        <include refid="selectInterviewRecordVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="positionId != null "> and position_id = #{positionId}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="duration != null "> and duration = #{duration}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectInterviewRecordById" parameterType="Long" resultMap="InterviewRecordResult">
+        <include refid="selectInterviewRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectInterviewRecordByUserId" resultMap="InterviewRecordResult">
+        select ir.*,ip.name from interview_record ir left join interview_position ip on ir.position_id = ip.id where user_id=#{userId} order by ir.id desc
+    </select>
+
+
+    <insert id="insertInterviewRecord" parameterType="InterviewRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into interview_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="positionId != null">position_id,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="duration != null">duration,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="positionId != null">#{positionId},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInterviewRecord" parameterType="InterviewRecord">
+        update interview_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="positionId != null">position_id = #{positionId},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteInterviewRecordById" parameterType="Long">
+        delete from interview_record where id = #{id}
+    </delete>
+
+    <delete id="deleteInterviewRecordByIds" parameterType="String">
+        delete from interview_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
